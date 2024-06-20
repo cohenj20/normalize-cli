@@ -10,5 +10,10 @@ def check_database_exists(conn):
         print 'db exists'
     '''
 
-    return pd.read_sql(query, con=conn)
+    logger.info('Running query.')
+    result = pd.read_sql(query, con=conn)
+    logger.info('Query completed successfully.')
+    logger.debug(f'Query result: {result}')
+
+    return result
 
