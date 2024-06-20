@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 def configure_logger():
     logger.info('Configuring logger.')
     logging.basicConfig(
-        level='WARN',
+        level='INFO',
         format=colorama.Fore.CYAN   + "%(asctime)s [%(levelname)s] %(name)s: %(message)s" + colorama.Fore.WHITE,
         handlers=[
             logging.StreamHandler()
