@@ -26,7 +26,7 @@ class SQLConnection():
         if self.db_type not in VALID_DB_TYPES:
             raise SystemExit(report_invalid_db_type(self.db_type))
         else:
-            if self.db_type == 'sqlserver' & check_database_exists(self.conn):
+            if self.db_type == 'sqlserver':
                 logger.info('Constructing uri.')
                 logger.debug(f'db_type: {self.db_type}')
                 self.uri = f'mssql+pyodbc://@{self.server}.sacredheart.edu/{self.db}?driver=ODBC+Driver+13+for+SQL+Server'
