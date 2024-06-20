@@ -1,0 +1,6 @@
+venv/
+.env
+**/__pycache__/
+ancesrty-cli.yaml
+dist
+tmp*/
