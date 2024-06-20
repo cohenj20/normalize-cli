@@ -20,7 +20,7 @@ def run(server, db, db_type):
     init_cli()
     engine = SQLConnection(server, db, db_type)
     engine.construct_uri()
-    conn = engine.conn
+    conn = engine.create_connection
 
     
 
