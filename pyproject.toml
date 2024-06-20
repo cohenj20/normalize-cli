@@ -15,7 +15,7 @@ sqlalchemy = "2.0.28"
 tqdm = "^4.66.4"
 
 [tool.poetry.scripts]
-ancestry = 'ancestry_cli.cli.commands:my_commands'
+normalize = 'normalize_cli.cli.commands:my_commands'
 
 [tool.poetry.group.dev.dependencies]
 commitizen = "^3.25.0"
