@@ -11,13 +11,14 @@ logger = logging.getLogger(__name__)
 
 @click.command()
 @click.option('--server', help='A sacredheart domain server name or IP address where the SHUDW database resides')
+@click.option('--db', help='Database being replicated.')
 @click.option('--db_type', help='Database type. Options: [sqlserver, oracle, mysql, postgresql]')
-def run(server, db_type):
+def run(server, db, db_type):
     """
     Generates normalize dbt models.
     """
     init_cli()
-    engine = SQLConnection(server, db_type)
+    engine = SQLConnection(server, db, db_type)
     engine.construct_uri()
     conn = engine.conn
 
