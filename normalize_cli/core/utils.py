@@ -16,3 +16,8 @@ def check_database_exists(conn, db):
 
     return result
 
+def write_lines_to_file(lines, filename):
+    with open(filename, 'w') as file:
+        for line in lines:
+            file.write(line + '\n')
+
