@@ -3,6 +3,7 @@ import click
 
 from normalize_cli.core.logger import configure_logger
 from normalize_cli.core.connection import SQLConnection
+from normalize_cli.core.utils import check_database_exists
 from normalize_cli.cli.outputs import init_cli
 
 configure_logger()
@@ -20,7 +21,9 @@ def run(server, db, db_type):
     init_cli()
     engine = SQLConnection(server, db, db_type)
     engine.construct_uri()
-    conn = engine.create_connection
+    engine.create_connection()
+    engine.test_connection()
+
 
     
 
