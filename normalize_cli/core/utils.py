@@ -3,17 +3,16 @@ import pandas as pd
 
 logger = logging.getLogger(__name__)
 
-def check_database_exists(conn):
-    query = '''
-    IF DB_ID('dms') IS NOT NULL
-        --code mine :)
-        print 'db exists'
+def check_database_exists(conn, db):
+    query = f'''
+    SELECT name 
+    from {db}.sys.tables
     '''
 
-    logger.info('Running query.')
-    result = pd.read_sql(query, con=conn)
-    logger.info('Query completed successfully.')
-    logger.debug(f'Query result: {result}')
+    logger.info('Checking if database exists.')
+    result = pd.read_sql(query, conn)
+    logger.info('Check ran successfully.')
+    logger.debug(f'Query result:\n {result}')
 
     return result
 
