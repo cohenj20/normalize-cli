@@ -33,12 +33,17 @@ class SQLConnection():
                 logger.info('Successfully constructed uri.')
                 logger.debug(f'constructed uri: {self.uri}')
 
-
     def create_connection(self): 
         logger.info('Creating connection')
         self.conn = create_engine(self.uri)
         logger.debug(f'engine: {self.conn}')
         logger.info('Successfully created connection')
+
+    def test_connection(self):
+        try:
+            check_database_exists(self.conn, self.db)
+        except Exception as E:
+            raise SystemExit(f'The connection test failed: \n {E}')
 
         
 
