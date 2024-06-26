@@ -128,7 +128,7 @@ class Metadata():
                 line = f"    CAST(JSON_VALUE({self.target_schema}, '$.{column['columnname']}') AS {column['type']}) AS {column['columnname']}"
             elif i > 0:
                 # logger.debug(f'i = {i}')
-                line = f"   ,CAST(JSON_VALUE({self.target_schema}, '$.{TOOLS_CONFIG[self.tool]['json_column'] + column['columnname']}') AS {column['type']}) AS {column['columnname']}"
+                line = f"   ,CAST(JSON_VALUE({TOOLS_CONFIG[self.tool]['json_column']}, '$.{column['columnname']}') AS {column['type']}) AS {column['columnname']}"
             else:
                 pass
         except:
