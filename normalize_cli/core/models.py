@@ -53,7 +53,7 @@ class Metadata():
                 UPPER(ty.name) AS type,
                 ty.max_length AS maxlength,
                 ty.precision AS precision,
-                CASE WHEN ty.is_nullable = 0 THEN 'False' ELSE 'True' END AS nullable,
+                CASE WHEN ty.is_nullable = 0 THEN 'False' ELSE 'True' END AS nullable
             FROM sys.columns c WITH (NOLOCK) 
             JOIN sys.objects o WITH (NOLOCK) on o.object_id = c.object_id
             JOIN sys.types ty WITH (NOLOCK) on c.system_type_id = ty.system_type_id
@@ -75,7 +75,7 @@ class Metadata():
                 UPPER(ty.name) AS type,
                 ty.max_length AS maxlength,
                 ty.precision AS precision,
-                CASE WHEN ty.is_nullable = 0 THEN 'False' ELSE 'True' END AS nullable,
+                CASE WHEN ty.is_nullable = 0 THEN 'False' ELSE 'True' END AS nullable
             FROM sys.columns c WITH (NOLOCK) 
             JOIN sys.objects o WITH (NOLOCK) on o.object_id = c.object_id
             JOIN sys.types ty WITH (NOLOCK) on c.system_type_id = ty.system_type_id
