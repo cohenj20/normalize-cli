@@ -27,7 +27,7 @@ def run(tool, server, source_db, target_db, target_schema, db_type, views):
     engine.construct_uri()
     engine.create_connection()
     engine.test_connection()
-    metadata = Metadata(engine.conn, views=views, target_db = target_db, target_schema=target_schema)
+    metadata = Metadata(engine.conn, views=views, target_db = target_db, target_schema=target_schema, tool=tool)
     metadata.generate_models()
 
 
