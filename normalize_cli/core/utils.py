@@ -26,4 +26,4 @@ def write_lines_to_file(lines, filename):
                 file.write(line + '\n')
                 logger.info(f'Successfully wrote line {i+1} to {filename}.')
             except Exception as E:
-                logger.warn(f'Error writing line {i+1} to {filename}.')
+                logger.error(f'Error writing line {i+1} to {filename}.')
