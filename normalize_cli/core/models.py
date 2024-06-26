@@ -54,13 +54,11 @@ class Metadata():
                 ty.max_length AS maxlength,
                 ty.precision AS precision,
                 CASE WHEN ty.is_nullable = 0 THEN 'False' ELSE 'True' END AS nullable,
-                CAST(sep.value AS VARCHAR) AS columndescription
             FROM sys.columns c WITH (NOLOCK) 
             JOIN sys.objects o WITH (NOLOCK) on o.object_id = c.object_id
             JOIN sys.types ty WITH (NOLOCK) on c.system_type_id = ty.system_type_id
             JOIN sys.schemas s WITH (NOLOCK) on s.schema_id = o.schema_id
-            LEFT JOIN stage.dimSchemaScripts scripts WITH (NOLOCK) ON scripts.ObjectName = o.name AND scripts.SchemaName = s.name
-            LEFT JOIN sys.extended_properties sep WITH (NOLOCK) on o.object_id = sep.major_id AND c.column_id = sep.minor_id AND sep.name = 'MS_Description'
+        
             WHERE o.type_desc IN (
                 'VIEW',
                 'USER_TABLE'
@@ -78,16 +76,10 @@ class Metadata():
                 ty.max_length AS maxlength,
                 ty.precision AS precision,
                 CASE WHEN ty.is_nullable = 0 THEN 'False' ELSE 'True' END AS nullable,
-                CAST(sep.value AS VARCHAR) AS columndescription
             FROM sys.columns c WITH (NOLOCK) 
             JOIN sys.objects o WITH (NOLOCK) on o.object_id = c.object_id
             JOIN sys.types ty WITH (NOLOCK) on c.system_type_id = ty.system_type_id
             JOIN sys.schemas s WITH (NOLOCK) on s.schema_id = o.schema_id
-            LEFT JOIN stage.dimSchemaScripts scripts WITH (NOLOCK) ON scripts.ObjectName = o.name AND scripts.SchemaName = s.name
-            LEFT JOIN sys.extended_properties sep WITH (NOLOCK) on o.object_id = sep.major_id AND c.column_id = sep.minor_id AND sep.name = 'MS_Description'
-                AND o.type_desc IN (
-                    'USER_TABLE'
-                )
             '''
 
         metadata = pd.read_sql(query, self.conn)
