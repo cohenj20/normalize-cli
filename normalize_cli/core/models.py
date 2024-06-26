@@ -1,14 +1,19 @@
 from functools import cached_property
 import logging
+from select import select
 from sys import int_info
 import pandas as pd
 from typing import Dict
+
+from normalize_cli.core.utils import write_lines_to_file
+
 
 logger = logging.getLogger(__name__)
 
 TOOLS_CONFIG = {
     'airbyte' : {
         'json_column' : '_airbyte_data',
+        'destination_table_prefix' : '_airbyte_raw_'
     }
 }
 
@@ -18,12 +23,23 @@ class Metadata():
         conn,
         views,
         target_db,
-        target_schema
+        target_schema,
+        tool
     ) -> None:
+        logger.info(f'Initializing Metadata instance...')
         self.conn = conn
+        logger.debug(f'self.conn = {conn}')
         self.views = views
+        logger.debug(f'self.views = {views}')
         self.target_db = target_db
+        logger.debug(f'self.target_db = {target_db}')
         self.target_schema = target_schema
+        logger.debug(f'self.target_schema = {target_schema}')
+        self.tool = tool
+        logger.debug(f'self.tool = {tool}')
+    
+
+
 
     def query_metadata(self):
         if self.views == 'true':
@@ -105,32 +121,48 @@ class Metadata():
         i: int,
         column: Dict[str, str]
         ):
-        logger.info(column)
-        if i == 0:
-            logger.debug(f'i = 1')
-            line = f"    CAST(JSON_VALUE({self.target_schema}, '$.{column['columnname']}') AS {column['type']}) AS {column['columnname']}"
-        elif i > 0:
-            logger.debug(f'i = {i}')
-            line = f"   ,CAST(JSON_VALUE({self.target_schema}, '$.{column['columnname']}') AS {column['type']}) AS {column['columnname']}"
-        else:
-            pass
+        # logger.info(column)
+        try:
+            if i == 0:
+                # logger.debug(f'i = 1')
+                line = f"    CAST(JSON_VALUE({self.target_schema}, '$.{column['columnname']}') AS {column['type']}) AS {column['columnname']}"
+            elif i > 0:
+                # logger.debug(f'i = {i}')
+                line = f"   ,CAST(JSON_VALUE({self.target_schema}, '$.{TOOLS_CONFIG[self.tool]['json_column'] + column['columnname']}') AS {column['type']}) AS {column['columnname']}"
+            else:
+                pass
+        except:
+            logger.warn(f'{column} does not contain proper attributes')
+            line = ''
         
         return line
 
+    def construct_select_line(self):
+        select_line = 'SELECT'
+        return select_line
 
-
-
-        
+    def construct_from_line(
+        self,
+        object: str
+        ):
+        from_line = f"FROM {TOOLS_CONFIG[self.tool]['destination_table_prefix'] + object}"
+        return from_line
 
     def generate_models(self):
         for object in self.unique_metadata_objects:
             columns = pd.DataFrame(self.full_metadata.loc[object]).to_dict(orient='records')
-            model_lines = ['SELECT']
+            model_lines = []
+            select_line = self.construct_select_line()
+            model_lines.append(select_line)
             for i, column in enumerate(columns):
-                line = self.construct_normalization_lines(i,column)
-                model_lines.append(line)
+                column_line = self.construct_normalization_lines(i,column)
+                model_lines.append(column_line)
+            from_line = self.construct_from_line(object=object)
+            model_lines.append(from_line)
 
-        return model_lines
+            write_lines_to_file(model_lines, filename=f'normalized_{object}.sql')
+
+        return logger.info(model_lines)
 
 
             
