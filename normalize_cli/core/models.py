@@ -114,23 +114,21 @@ class Metadata():
 
         return unique_metadata_objects
 
-    
-
     def construct_normalization_lines(
         self,
         i: int,
         column: Dict[str, str]
         ):
-        # logger.info(column)
+
         try:
+            logger.info('Constructing column line for model file.')
             if i == 0:
-                # logger.debug(f'i = 1')
+                logger.debug(f'column index = 0')
                 line = f"    CAST(JSON_VALUE({TOOLS_CONFIG[self.tool]['json_column']}, '$.{column['columnname']}') AS {column['type']}) AS {column['columnname']}"
-            elif i > 0:
-                # logger.debug(f'i = {i}')
-                line = f"   ,CAST(JSON_VALUE({TOOLS_CONFIG[self.tool]['json_column']}, '$.{column['columnname']}') AS {column['type']}) AS {column['columnname']}"
             else:
-                pass
+                logger.debug(f'column index = {i}')
+                line = f"   ,CAST(JSON_VALUE({TOOLS_CONFIG[self.tool]['json_column']}, '$.{column['columnname']}') AS {column['type']}) AS {column['columnname']}"
+            
         except:
             logger.warn(f'{column} does not contain proper attributes')
             line = ''
@@ -138,22 +136,35 @@ class Metadata():
         return line
 
     def construct_select_line(self):
+        logger.info('Constructing SELECT line for model file.')
         select_line = 'SELECT'
+        logger.info('Successfully constructed SELECT line for model file.')
+
         return select_line
 
     def construct_from_line(
         self,
         object: str
         ):
-        from_line = f"FROM [{self.target_db}].[{self.target_schema}].[{TOOLS_CONFIG[self.tool]['destination_table_prefix'] + object}]"
+        try:
+            logger.info('Constructing FROM line for model file.')
+            from_line = f"FROM [{self.target_db}].[{self.target_schema}].[{TOOLS_CONFIG[self.tool]['destination_table_prefix'] + object}]"
+            logger.info('Successfully constructed FROM line.')
+
+        except Exception as E:
+            logger.warn(f'Failed to construct FROM line: \n{E}')
+
         return from_line
 
     def generate_models(self):
+        logger.info('Iterating through objects retrieved from source database.')
         for object in self.unique_metadata_objects:
             columns = pd.DataFrame(self.full_metadata.loc[object]).to_dict(orient='records')
             model_lines = []
             select_line = self.construct_select_line()
             model_lines.append(select_line)
+
+            logger.info('Iterating through object columns.')
             for i, column in enumerate(columns):
                 column_line = self.construct_normalization_lines(i,column)
                 model_lines.append(column_line)
