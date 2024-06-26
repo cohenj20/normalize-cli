@@ -18,6 +18,12 @@ def check_database_exists(conn, db):
 
 def write_lines_to_file(lines, filename):
     with open(filename, 'w', encoding="utf-8") as file:
-        for line in lines:
-            file.write(line + '\n')
-
+        logger.info('Iterating through lines.')
+        for i, line in enumerate(lines):
+            try:
+                logger.info(f'Writing line {i+1} to {filename}')
+                logger.debug(f'Line contents: {line}')
+                file.write(line + '\n')
+                logger.info(f'Successfully wrote line {i+1} to {filename}.')
+            except Exception as E:
+                logger.warn(f'Error writing line {i+1} to {filename}.')
