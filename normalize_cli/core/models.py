@@ -62,7 +62,9 @@ class Metadata():
             WHERE o.type_desc IN (
                 'VIEW',
                 'USER_TABLE'
-            ) AND o.name NOT LIKE '%BrandonTest%'
+            ) 
+                AND ty.is_user_defined = 0
+                AND ty.user_type_id <> '256'
             '''
         else:
             logger.info('Querying only table metadata from source database.')
@@ -80,6 +82,8 @@ class Metadata():
             JOIN sys.objects o WITH (NOLOCK) on o.object_id = c.object_id
             JOIN sys.types ty WITH (NOLOCK) on c.system_type_id = ty.system_type_id
             JOIN sys.schemas s WITH (NOLOCK) on s.schema_id = o.schema_id
+            WHERE ty.is_user_defined = 0
+                AND ty.user_type_id <> '256'
             '''
 
         metadata = pd.read_sql(query, self.conn)
