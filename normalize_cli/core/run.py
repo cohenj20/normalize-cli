@@ -1,9 +1,10 @@
-import logging 
+import logging
 import click
+import os
 
 from normalize_cli.core.logger import configure_logger
 from normalize_cli.core.connection import SQLConnection
-from normalize_cli.cli.outputs import init_cli
+from normalize_cli.cli.outputs import init_cli, report_successful_model_generation
 from normalize_cli.core.models import Metadata
 
 configure_logger()
@@ -29,6 +30,9 @@ def run(tool, server, source_db, target_db, target_schema, db_type, views):
     engine.test_connection()
     metadata = Metadata(engine.conn, views=views, target_db = target_db, target_schema=target_schema, tool=tool)
     metadata.generate_models()
+    report_successful_model_generation(model_count=len(metadata.unique_metadata_objects), cwd=os.getcwd())
+
+
 
 
     
