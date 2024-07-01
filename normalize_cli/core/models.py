@@ -168,7 +168,7 @@ class Metadata():
             from_line = self.construct_from_line(object=object)
             model_lines.append(from_line)
 
-            write_lines_to_file(model_lines, filename=f'normalized_{object}.sql')
+            write_lines_to_file(model_lines, filename=f'{self.tool}_normalized_{object}.sql')
 
         return logger.info(model_lines)
 
