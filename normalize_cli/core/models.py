@@ -50,7 +50,7 @@ class Metadata():
                 s.name AS objectschema,
                 o.type_desc AS objecttype,
                 c.name AS columnname, 
-                UPPER(ty.name) AS type,
+                CASE WHEN ty.name = 'datetime' THEN 'DATETIME2' ELSE UPPER(ty.name) END AS type,
                 ty.max_length AS maxlength,
                 ty.precision AS precision,
                 CASE WHEN ty.is_nullable = 0 THEN 'False' ELSE 'True' END AS nullable
@@ -74,7 +74,7 @@ class Metadata():
                 s.name AS objectschema,
                 o.type_desc AS objecttype,
                 c.name AS columnname, 
-                UPPER(ty.name) AS type,
+                CASE WHEN ty.name = 'datetime' THEN 'DATETIME2' ELSE UPPER(ty.name) END AS type,
                 ty.max_length AS maxlength,
                 ty.precision AS precision,
                 CASE WHEN ty.is_nullable = 0 THEN 'False' ELSE 'True' END AS nullable
