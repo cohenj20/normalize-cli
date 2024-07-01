@@ -82,7 +82,8 @@ class Metadata():
             JOIN sys.objects o WITH (NOLOCK) on o.object_id = c.object_id
             JOIN sys.types ty WITH (NOLOCK) on c.system_type_id = ty.system_type_id
             JOIN sys.schemas s WITH (NOLOCK) on s.schema_id = o.schema_id
-            WHERE ty.is_user_defined = 0
+            WHERE o.type_desc = 'USER_TABLE'
+                AND ty.is_user_defined = 0
                 AND ty.user_type_id <> '256'
             '''
 
